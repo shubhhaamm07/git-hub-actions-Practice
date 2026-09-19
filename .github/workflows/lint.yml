@@ -1,0 +1,14 @@
+#Gole: When ever some one change the Python, the linter will check if the syntax format, indentation, mainly check the name: AutoLinter
+on:
+  push:
+    paths: "*.py"
+
+jobs:
+  code:
+    runs-on: ubuntu-latest
+    #this step will auto matically clone tyhe code of the current branch into the runner
+    steps:
+      - name: Checkout the Code
+        uses: actions/checkout@v7
+      - name: Install Linter
+        run: pip install ruff
