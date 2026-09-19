@@ -1,0 +1,9 @@
+#workflows
+#should have a name
+
+#jobs
+# should be inside workflows
+#steps
+#should be inside jobs
+#action
+#should be inside steps
