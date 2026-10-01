@@ -1,0 +1,37 @@
+#Gole - I have to lint build test the code for frontend and backend and then push the Images to docker hub  
+name : CI
+on:
+    push:
+        branches: ["main"]
+
+jobs:
+    frontend:
+        # Git hub runner
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v7
+              
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with: 
+                node-version: 20 
+                cache: 'npm'
+                cache-dependency-path: frontend/package-lock.json
+
+            - name: Install Dependencies
+              run: npm install
+
+            - name: Run linter
+              run: npm run lint 
+
+            - name: Run test
+              run: npm run test
+            # - test
+            # - push
+    # backend:
+        # steps:
+            # - Lint
+            # - Build
+            # - test
+            # - Push
