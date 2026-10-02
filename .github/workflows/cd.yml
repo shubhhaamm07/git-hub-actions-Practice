@@ -1,12 +1,7 @@
 # Goal: to deploy build images from CI step once the CI workflow is succeeded
 name: CD
 on:
-  workflow_run:
-    workflows: ["CI"]
-    types:
-      - completed
-    branches:
-      - main
+  workflow_call:
 jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
