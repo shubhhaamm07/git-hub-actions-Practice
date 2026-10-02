@@ -270,8 +270,8 @@ To enable SonarQube scanning in your GitHub Actions pipeline:
 To allow the CI pipeline to build and push images to Docker Hub:
 1. Navigate to **Settings > Secrets and variables > Actions**.
 2. Under the **Variables** tab, add:
-   - `DOCKERHUB_USERNAME`: Your Docker Hub username.
+   - `DOCKER_USERNAME`: Your Docker Hub username.
 3. Under the **Secrets** tab, add:
-   - `DOCKERHUB_TOKEN`: A Personal Access Token (PAT) generated from Docker Hub.
+   - `DOCKER_HUB_TOKEN`: A Personal Access Token (PAT) generated from Docker Hub.
 
 
