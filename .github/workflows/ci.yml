@@ -1,41 +1,84 @@
-# #Gole - I have to lint build test the code for frontend and backend and then push the Images to docker hub  
-# name : CI
-# on:
-#     push:
-#         branches: ["main"]
+# #Gole - I have to lint build test the code for frontend and backend and then push the Images to docker hub
 
-# jobs:
-#     frontend:
-#         # Git hub runner
-#         runs-on: ubuntu-latest
-#         defaults:
-#             run:
-#                 working-directory: frontend
-#         steps:
-#             - name: Checkout code
-#               uses: actions/checkout@v7
-              
-#             - name: Setup Node.js
-#               uses: actions/setup-node@v3
-#               with: 
-#                 node-version: 20 
-#                 cache: 'npm'
-#                 cache-dependency-path: frontend/package-lock.json
-
-#             - name: Install Dependencies
-#               run: npm install
-
-#             - name: Run linter
-#               run: npm run lint 
-
-#             - name: Run test
-#               run: npm run test
-            
-#             # - name: Docker 
-#             # - push
-#     # backend:
-#         # steps:
-#             # - Lint
-#             # - Build
-#             # - test
-#             # - Push
+# Checkout code ✅
+# Install Dependencies
+# Lint
+# test
+# build
+name: CI
+on:
+  push:
+    branches: ["main"]
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup of Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Linter
+        run: npm run lint
+      - name: Run Test
+        run: npm run test
+      - name: Login as Docker
+        uses: docker/login-action@v2
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/devboard-frontend:latest
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21
+          cache: "go"
+          cache-dependency-path: backend/go.sum
+      - name: Install Dependencies
+        run: go mod download
+      - name: Go formatter
+        run: go fmt
+      - name: Go Vet
+        run: go vet
+      - name: Go tests
+        run: go test
+      - name: Login as Docker
+        uses: docker/login-action@v2
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/devboard-backend:latest
