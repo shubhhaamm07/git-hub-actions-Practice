@@ -35,9 +35,10 @@ jobs:
                 password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
             - name: Docker build and push
-              run:
+              uses: docker/build-push-action@v5
+              with:
                 docker build -t ${{ vars.DOCKER_USERNAME }}/frontend:latest .
-                docker push ${{ vars.DOCKER_USERNAME }}/frontend:latestd
+                docker push ${{ vars.DOCKER_USERNAME }}/frontend:latest
 
           
               
