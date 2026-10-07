@@ -1,0 +1,25 @@
+name: Matrix Practice
+on:
+  workflow_dispatch:
+jobs:
+  code-format:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    strategy:
+      fail-fast: true
+      matrix:
+        go: ["1.22", "1.23", "1.24"]
+    steps:
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go }}
+          go-version-file: "go.mod"
+          cache-dependency-path: go.sum
+
+      - name: go formatter
+        run: go fmt
+      - name: go vet
+        run: go vet
