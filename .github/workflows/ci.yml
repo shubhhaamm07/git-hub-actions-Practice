@@ -8,9 +8,9 @@
 name: CI
 on:
   push:
-    paths:
-      - "**"
-      - "!.github/workflows/**"
+    # paths:
+    #   - "**"
+    #   - "!.github/workflows/**"
     branches: [main]
 jobs:
   frontend:
@@ -33,21 +33,6 @@ jobs:
         run: npm run lint
       - name: Run Test
         run: npm run test
-      - name: Login as Docker
-        uses: docker/login-action@v2
-        with:
-          username: ${{ vars.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./frontend
-          push: true
-          tags: ${{ vars.DOCKER_USERNAME }}/devboard-frontend:latest
   backend:
     runs-on: ubuntu-latest
     defaults:
@@ -70,6 +55,15 @@ jobs:
         run: go vet
       - name: Go tests
         run: go test
+  build-and-push-images:
+    needs: [frontend, backend]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        folder: [frontend, backend]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
       - name: Login as Docker
         uses: docker/login-action@v2
         with:
@@ -82,10 +76,11 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: ./backend
+          context: ./${{ matrix.folder }}
           push: true
-          tags: ${{ vars.DOCKER_USERNAME }}/devboard-backend:latest
+          tags: ${{ vars.DOCKER_USERNAME }}/devboard-${{ matrix.folder }}:latest
+
   deploy:
-    needs: [frontend, backend]
+    needs: [frontend, backend, build-and-push-images]
     uses: ./.github/workflows/cd.yml
     secrets: inherit
