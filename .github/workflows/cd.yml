@@ -1,11 +1,14 @@
 # Goal: to deploy build images from CI step once the CI workflow is succeeded
 name: CD
 on:
-  workflow_call:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
 jobs:
   deploy:
+    # if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v7
