@@ -3,25 +3,36 @@ name: Matrix-Build
 on:
   push:
     branches: [main]
+
 jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["1.22", "1.23", "1.24"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Test on ${{ matrix.os }} with Python ${{ matrix['go-version'] }}
+        run: echo "Testing on ${{ matrix.os }} with Go ${{ matrix['go-version'] }}"
+
   deploy:
-    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
     strategy:
       matrix:
-        go: ["1.22", "1.23", "1.24"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ["1.22", "1.23", "1.24"]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v7
       - name: Setup Go
         uses: actions/setup-go@v7
         with:
-          go-version: ${{ matrix.go }}
-          #   go-version-file: "go.mod"
+          go-version: ${{ matrix['go-version'] }}
           cache-dependency-path: backend/go.sum
       - name: Go formatter
         run: go fmt
-      - name: go Vet
+      - name: Go Vet
         run: go vet
