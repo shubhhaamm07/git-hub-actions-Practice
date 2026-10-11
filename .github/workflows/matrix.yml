@@ -1,0 +1,25 @@
+name: Matrix-Build
+
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    strategy:
+      matrix:
+        go: ["1.22", "1.23", "1.24"]
+    steps:
+      - name: Setup Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: ${{ matrix.go }}
+          go-version-file: "go.mod"
+          cache-dependency-path: go.sum
+      - name: Go formatter
+        run: go fmt
+      - name: go Vet
+        run: go vet
