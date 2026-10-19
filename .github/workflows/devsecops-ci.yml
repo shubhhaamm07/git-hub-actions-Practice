@@ -1,0 +1,14 @@
+# GitHub only loads workflows directly inside .github/workflows/.
+name: DevSecOps
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  code-quality:
+    uses: ./.github/workflows/code-quality.yml
