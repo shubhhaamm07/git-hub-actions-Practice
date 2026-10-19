@@ -1,1 +1,17 @@
 # To ensure no secreats have been leak to the code
+name: Screat Scanning
+on:
+  workflow_call:
+jobs:
+  scan-screats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: gitLeaks Scanner
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
