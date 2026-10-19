@@ -1,7 +1,7 @@
 # Goal: to deploy build images from CI step once the CI workflow is succeeded
 name: CD
 on:
-  workflow_call:
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
