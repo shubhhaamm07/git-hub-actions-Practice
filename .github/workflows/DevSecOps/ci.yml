@@ -6,4 +6,3 @@ on:
 jobs:
   code-quality:
     uses: ./.github/workflows/code-quality.yml
-    
