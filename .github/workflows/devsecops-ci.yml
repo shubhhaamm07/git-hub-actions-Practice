@@ -9,3 +9,5 @@ jobs:
     uses: ./.github/workflows/code-quality.yml
   secreat-scanning:
     uses: ./.github/workflows/secreat-scanning.yml
+  dependency-scanning:
+    uses: ./.github/workflows/dependency-scan.yml
