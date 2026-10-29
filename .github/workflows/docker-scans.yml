@@ -27,7 +27,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Docker Build ${{matrix.folders}}
-        run: Docker build -t ${{vars.DOCKER_USERNAME}}/devboard-${{matrix.folders}}:latest .
+        run: docker build -t ${{vars.DOCKER_USERNAME}}/devboard-${{matrix.folders}}:latest .
         working-directory: ${{matrix.folders}}
 
       - name: Run Trivy vulnerability scanner
