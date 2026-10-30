@@ -22,7 +22,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
+      - name: Install dependencies
+        run: npm ci --include=optional
       - name: Run Test
         run: npm run test
   backend:
