@@ -19,3 +19,4 @@ jobs:
     secrets: inherit
   push-to-docker-hub:
     uses: ./.github/workflows/ci.yml
+    secrets: inherit
