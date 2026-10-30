@@ -5,14 +5,14 @@
 # Lint
 # test
 # build
-name: CI
+name: Push to docker hub
 on:
   # push:
   #   # paths:
   #   #   - "**"
   #   #   - "!.github/workflows/**"
   #   branches: [main]
-  workflow_dispatch:
+  workflow_call:
 jobs:
   frontend:
     runs-on: ubuntu-latest

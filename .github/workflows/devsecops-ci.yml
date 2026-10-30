@@ -17,3 +17,5 @@ jobs:
   sonar:
     uses: ./.github/workflows/sonar-scan.yml
     secrets: inherit
+  push-to-docker-hub:
+    uses: ./.github/workflows/ci.yml
