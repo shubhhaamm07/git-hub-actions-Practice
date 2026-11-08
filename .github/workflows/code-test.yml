@@ -1,0 +1,32 @@
+name: Code test
+on:
+  workflow_call:
+jobs:
+  code-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci --include=optional
+        working-directory: frontend
+      - name: Run frontend tests
+        run: npm test
+        working-directory: frontend
+  code-test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+      - name: SetUp Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: backend/go.mod
+          cache-dependency-path: backend/go.sum
+      - name: Go tests
+        run: go test ./...
+        working-directory: backend

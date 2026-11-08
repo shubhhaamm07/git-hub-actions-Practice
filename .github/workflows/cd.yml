@@ -16,6 +16,8 @@ jobs:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Deploy the container with docker-compose
+        env:
+          DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
         run: |
           docker compose pull
           docker compose up -d

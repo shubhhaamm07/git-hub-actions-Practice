@@ -7,6 +7,8 @@ on:
 jobs:
   code-quality:
     uses: ./.github/workflows/code-quality.yml
+  code-test:
+    uses: ./.github/workflows/code-test.yml
   secreat-scanning:
     uses: ./.github/workflows/secreat-scanning.yml
   dependency-scanning:
@@ -14,9 +16,21 @@ jobs:
   docker-checks:
     uses: ./.github/workflows/docker-scans.yml
     secrets: inherit
+  dast:
+    uses: ./.github/workflows/dast.yml
   sonar:
     uses: ./.github/workflows/sonar-scan.yml
     secrets: inherit
   push-to-docker-hub:
     uses: ./.github/workflows/ci.yml
+    needs:
+      [
+        code-quality,
+        code-test,
+        sonar,
+        dependency-scanning,
+        docker-checks,
+        secreat-scanning,
+        dast,
+      ]
     secrets: inherit
